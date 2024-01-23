@@ -11,7 +11,7 @@
 
 			const isDark =
 				theme === 'dark' ||
-				(theme === 'system' && matchMedia('(prefers-color-scheme: dark)')).matches;
+				(theme === 'system' && matchMedia('(prefers-color-scheme: dark)').matches);
 
 			document.documentElement.classList.toggle('dark', isDark);
 		</script>

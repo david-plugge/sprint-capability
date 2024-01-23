@@ -22,6 +22,12 @@
 		}
 	}
 
+	function isDark(theme: Theme) {
+		return (
+			theme === 'dark' || (theme === 'system' && matchMedia('(prefers-color-scheme: dark)').matches)
+		);
+	}
+
 	onMount(() => {
 		currentTheme = (localStorage.getItem('theme') ?? defaultTheme) as Theme;
 
