@@ -2,19 +2,28 @@
 	import * as Dropdown from '$lib/components/ui/dropdown-menu';
 	import { Button } from '$lib/components/ui/button';
 	import { onMount } from 'svelte';
-	import { Check } from 'lucide-svelte';
+	import { Check, Sun, Moon } from 'lucide-svelte';
+	import { browser } from '$app/environment';
 
-	type Theme = 'light' | 'dark' | 'system';
 	const defaultTheme = 'system';
+
+	const THEMES = ['light', 'dark', 'system'] as const;
+	type Theme = (typeof THEMES)[number];
+
+	const themeName: Record<Theme, string> = {
+		light: 'Light',
+		dark: 'Dark',
+		system: 'System'
+	};
 
 	let currentTheme: Theme = defaultTheme;
 
 	function selectTheme(theme: 'light' | 'dark' | 'system') {
 		currentTheme = theme;
 		localStorage.setItem('theme', currentTheme);
-
-		document.documentElement.classList.toggle('dark');
 	}
+
+	$: browser && document.documentElement.classList.toggle('dark', isDark(currentTheme));
 
 	function handleStorageEvent(event: StorageEvent) {
 		if (event.key === 'theme') {
@@ -40,14 +49,19 @@
 
 <Dropdown.Root>
 	<Dropdown.Trigger asChild let:builder>
-		<Button builders={[builder]} variant="outline">Open</Button>
+		<Button builders={[builder]} variant="ghost">
+			<Moon class="hidden dark:block"></Moon>
+			<Sun class="block dark:hidden"></Sun>
+		</Button>
 	</Dropdown.Trigger>
 	<Dropdown.Content class="w-24">
-		<Dropdown.Item on:click={() => selectTheme('light')}>
-			<Check class="hidden"></Check>
-			Light
-		</Dropdown.Item>
-		<Dropdown.Item on:click={() => selectTheme('dark')}>Dark</Dropdown.Item>
-		<Dropdown.Item on:click={() => selectTheme('system')}>System</Dropdown.Item>
+		{#each THEMES as theme}
+			<Dropdown.Item on:click={() => selectTheme(theme)} class="relative pl-8">
+				{#if currentTheme === theme}
+					<Check class="absolute left-1 w-6"></Check>
+				{/if}
+				{themeName[theme]}
+			</Dropdown.Item>
+		{/each}
 	</Dropdown.Content>
 </Dropdown.Root>
