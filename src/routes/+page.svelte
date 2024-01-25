@@ -44,17 +44,6 @@
 		}
 		return res;
 	}
-
-	let start: { x: number; y: number } = { x: -1, y: -1 };
-	let end: { x: number; y: number } = { x: -1, y: -1 };
-
-	function handleSelect(end: { x: number; y: number }) {
-		console.log(start, end);
-	}
-
-	$: isIn = (x: number, y: number) => {
-		return x >= start.x && x <= end.x && y >= start.y && y <= end.y;
-	};
 </script>
 
 <div class="container py-16">
@@ -68,7 +57,7 @@
 	</div>
 
 	<table class="w-full whitespace-nowrap">
-		<thead class="text-sm font-medium text-muted-foreground [&_th]:border [&_th]:p-2">
+		<thead class="text-left text-sm font-medium text-muted-foreground [&_th]:border [&_th]:p-2">
 			<tr>
 				<th>User</th>
 				<th>Role</th>
@@ -90,23 +79,13 @@
 		</thead>
 
 		<tbody class="[&_td]:border [&_td]:p-2">
-			{#each $users as user, y}
+			{#each $users as user}
 				<tr>
 					<td class="font-medium">{user.name}</td>
-					<td></td>
+					<td>{user.role}</td>
 
-					{#each user.availability as a, x}
-						<td
-							class="bg-muted/25"
-							class:bg-red-500={isIn(x, y)}
-							on:pointerdown|preventDefault={() => {
-								start = { x, y };
-							}}
-							on:pointerenter={() => {
-								end = { x, y };
-							}}
-							on:pointerup={() => handleSelect({ x, y })}>{a}</td
-						>
+					{#each user.availability as a}
+						<td class="bg-muted/25">{a}</td>
 					{/each}
 
 					<td></td>
@@ -120,26 +99,7 @@
 
 	<h2 class="mb-8 text-xl">Results:</h2>
 
-	<table>
-		<thead>
-			<tr>
-				<th>Total workdays</th>
-				{#each $roles as role}
-					<th>{role}</th>
-				{/each}
-			</tr>
-		</thead>
-		<tbody class="[&_td]:border [&_td]:p-2">
-			{#each $roles as role}
-				<tr>
-					<td>{role}:</td>
-					<td>{0}</td>
-				</tr>
-			{/each}
-		</tbody>
-	</table>
-
-	<Table.Root>
+	<Table.Root class="whitespace-nowrap">
 		<Table.Header>
 			<Table.Row>
 				{#each $roles as role}
@@ -156,10 +116,8 @@
 					<Table.Cell>{getWorkdaysForRole($users, role)}</Table.Cell>
 				{/each}
 
-				<Table.Cell class="font-medium">INV001</Table.Cell>
-				<Table.Cell>Paid</Table.Cell>
-				<Table.Cell>Credit Card</Table.Cell>
-				<Table.Cell class="text-right">$250.00</Table.Cell>
+				<Table.Cell>0</Table.Cell>
+				<Table.Cell class="text-right">0</Table.Cell>
 			</Table.Row>
 		</Table.Body>
 	</Table.Root>

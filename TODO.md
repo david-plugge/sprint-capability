@@ -1,0 +1,2 @@
+- options as buttons (with shortcuts)
+- set value on mouseclick (and drag when clicked)
